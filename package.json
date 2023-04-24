@@ -1,0 +1,25 @@
+{
+    "name": "ffapi",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "npx tsc && node build/testFFAPI.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/serose99/FFAPI.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/serose99/FFAPI/issues"
+    },
+    "homepage": "https://github.com/serose99/FFAPI#readme",
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "typescript": "^5.0.4"
+    }
+}

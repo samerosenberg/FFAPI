@@ -1,0 +1,5 @@
+/node_modules
+
+#Hiding my private league info just in case
+src/leagueInfo.json
+build/leagueInfo.json
