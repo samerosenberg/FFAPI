@@ -1,4 +1,5 @@
 import { TeamRecord, ITeamRecord } from "./record";
+import { Player, IESPNPlayer } from "./player";
 
 export class Team {
     public abbrev: string;
@@ -13,7 +14,7 @@ export class Team {
     public primaryOwner: string;
     public rankCalculatedFinal: number;
     public record: TeamRecord;
-    //public roster: Roster;
+    public roster: Player[];
     public transactionCounter: ITransactionCounter;
     public waiverRank: number;
 
@@ -30,7 +31,12 @@ export class Team {
         this.primaryOwner = team.primaryOwner;
         this.rankCalculatedFinal = team.rankCalculatedFinal;
         this.record = new TeamRecord(team.record);
-        //this.roster = new Roster(team.roster);
+        this.roster = team.roster.entries.map((poolEntry: IPlayerPoolEntry) => {
+            const player = poolEntry.playerPoolEntry;
+            const newPlayer = new Player(player.player);
+            newPlayer.onTeamId = player.onTeamId; // can we include current slot too
+            return newPlayer;
+        });
         this.transactionCounter = team.transactionCounter;
         this.waiverRank = team.waiverRank;
     }
@@ -49,9 +55,13 @@ export interface ITeam {
     primaryOwner: string;
     rankCalculatedFinal: number;
     record: ITeamRecord;
-    roster: {};
+    roster: { entries: IPlayerPoolEntry[] };
     transactionCounter: ITransactionCounter;
     waiverRank: number;
+}
+
+interface IPlayerPoolEntry {
+    playerPoolEntry: IESPNPlayer;
 }
 
 interface ITransactionCounter {
