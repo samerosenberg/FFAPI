@@ -21,26 +21,38 @@ class Player {
         this.weekStats = this.getWeekStats(player.stats);
         this.weekProjections = this.getWeekProjections(player.stats);
     }
-    getTotalStats(stats) {
+    getTotalStats(playerStats) {
         var _a;
-        const totalStats = (_a = stats.filter((stat) => {
-            return stat.scoringPeriodId !== 0 && stat.statSourceId === 1;
+        const totalStats = (_a = playerStats.filter((stat) => {
+            return stat.scoringPeriodId === 0 && stat.statSourceId === 0;
         })[0]) !== null && _a !== void 0 ? _a : undefined;
+        if (!totalStats) {
+            return {};
+        }
         var statmap = new Map();
         Object.keys(totalStats.stats).map((key) => {
-            statmap.set(ScoringIdMap[key], totalStats.stats[key]);
+            const mapping = ScoringIdMap[key];
+            if (mapping) {
+                statmap.set(mapping, totalStats.stats[key]);
+            }
         });
         totalStats.stats = statmap;
         return totalStats;
     }
-    getWeekStats(stats) {
+    getWeekStats(playerStats) {
         var _a;
-        const weekStats = (_a = stats.filter((stat) => {
-            return stat.scoringPeriodId !== 0 && stat.statSourceId === 1;
+        const weekStats = (_a = playerStats.filter((stat) => {
+            return stat.scoringPeriodId !== 0 && stat.statSourceId === 0;
         })[0]) !== null && _a !== void 0 ? _a : undefined;
+        if (!weekStats) {
+            return {};
+        }
         var statmap = new Map();
         Object.keys(weekStats.stats).map((key) => {
-            statmap.set(ScoringIdMap[key], weekStats.stats[key]);
+            const mapping = ScoringIdMap[key];
+            if (mapping) {
+                statmap.set(mapping, weekStats.stats[key]);
+            }
         });
         weekStats.stats = statmap;
         return weekStats;
@@ -50,9 +62,15 @@ class Player {
         const weekProjections = (_a = stats.filter((stat) => {
             return stat.scoringPeriodId !== 0 && stat.statSourceId === 1;
         })[0]) !== null && _a !== void 0 ? _a : undefined;
+        if (!weekProjections) {
+            return {};
+        }
         var statmap = new Map();
         Object.keys(weekProjections.stats).map((key) => {
-            statmap.set(ScoringIdMap[key], weekProjections.stats[key]);
+            const mapping = ScoringIdMap[key];
+            if (mapping) {
+                statmap.set(mapping, weekProjections.stats[key]);
+            }
         });
         weekProjections.stats = statmap;
         return weekProjections;
@@ -77,4 +95,5 @@ const ScoringIdMap = {
     "43": "receivingTouchdowns",
     "44": "receiving2PtConversions",
     "68": "fumbles",
+    "213": "receivingFirstDowns",
 };

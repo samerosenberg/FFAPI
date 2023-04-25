@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Team = void 0;
 const record_1 = require("./record");
+const player_1 = require("./player");
 class Team {
     constructor(team) {
         this.abbrev = team.abbrev;
@@ -16,7 +17,12 @@ class Team {
         this.primaryOwner = team.primaryOwner;
         this.rankCalculatedFinal = team.rankCalculatedFinal;
         this.record = new record_1.TeamRecord(team.record);
-        //this.roster = new Roster(team.roster);
+        this.roster = team.roster.entries.map((poolEntry) => {
+            const player = poolEntry.playerPoolEntry;
+            const newPlayer = new player_1.Player(player.player);
+            newPlayer.onTeamId = player.onTeamId;
+            return newPlayer;
+        });
         this.transactionCounter = team.transactionCounter;
         this.waiverRank = team.waiverRank;
     }

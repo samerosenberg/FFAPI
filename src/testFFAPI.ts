@@ -22,10 +22,10 @@ async function testGetMatchups(): Promise<void> {
 
 async function testGetTeams(): Promise<void> {
     const teams_week3 = await testAPI.getTeams(3);
-    console.log(teams_week3);
+    console.log(teams_week3[0].roster);
 }
 
-//testGetTeams();
+testGetTeams();
 
 async function testGetTeamsRoster(): Promise<void> {
     const teams_week1 = await testAPI.getTeams(3);
@@ -52,11 +52,11 @@ async function testGetTeamsRoster(): Promise<void> {
 //testGetTeamsRoster();
 
 async function testGetPlayers(): Promise<void> {
-    const players = await testAPI.getPlayers([2976212], 4);
+    const players = await testAPI.getPlayers([2976212], 5);
     console.log(players[0]);
     //console.log("002022:", players[0].player.stats[1].stats);
     //console.log("weekly:", players.players[0].player.stats[2].stats); //scoring period === week && stateSourceId === 0: points scored
     //console.log("1120221:", players.players[0].player.stats[4].stats); //scoring period === week && statSourceId === 1: projections
 }
 
-testGetPlayers();
+//testGetPlayers();

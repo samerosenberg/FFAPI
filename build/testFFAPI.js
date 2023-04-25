@@ -35,10 +35,10 @@ function testGetMatchups() {
 function testGetTeams() {
     return __awaiter(this, void 0, void 0, function* () {
         const teams_week3 = yield testAPI.getTeams(3);
-        console.log(teams_week3);
+        console.log(teams_week3[0].roster);
     });
 }
-//testGetTeams();
+testGetTeams();
 function testGetTeamsRoster() {
     return __awaiter(this, void 0, void 0, function* () {
         const teams_week1 = yield testAPI.getTeams(3);
@@ -64,11 +64,11 @@ function testGetTeamsRoster() {
 //testGetTeamsRoster();
 function testGetPlayers() {
     return __awaiter(this, void 0, void 0, function* () {
-        const players = yield testAPI.getPlayers([2976212], 4);
+        const players = yield testAPI.getPlayers([2976212], 5);
         console.log(players[0]);
         //console.log("002022:", players[0].player.stats[1].stats);
         //console.log("weekly:", players.players[0].player.stats[2].stats); //scoring period === week && stateSourceId === 0: points scored
         //console.log("1120221:", players.players[0].player.stats[4].stats); //scoring period === week && statSourceId === 1: projections
     });
 }
-testGetPlayers();
+//testGetPlayers();
