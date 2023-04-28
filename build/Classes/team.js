@@ -27,5 +27,33 @@ class Team {
         this.transactionCounter = team.transactionCounter;
         this.waiverRank = team.waiverRank;
     }
+    //TODO: Fix this
+    getMaxPointsForWeek() {
+        const roster = new Map();
+        for (const [slotId, pos] of lineupSlotIds) {
+            this.roster.map((player) => {
+                // if (pos in roster) {
+                //     roster[pos].append([
+                //         player.id,
+                //         player.weekStats?.appliedTotal ?? 0,
+                //     ]);
+                // } else {
+                //     roster[pos] = [
+                //         [player.id, player.weekStats?.appliedTotal ?? 0],
+                //     ];
+                // }
+            });
+        }
+        return 0;
+    }
 }
 exports.Team = Team;
+const lineupSlotIds = new Map([
+    [0, "QB"],
+    [2, "RB"],
+    [4, "WR"],
+    [6, "TE"],
+    [23, "FLEX"],
+    [16, "D/ST"],
+    [17, "K"],
+]);

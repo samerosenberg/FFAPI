@@ -5,6 +5,7 @@ export class Player {
     public onTeamId: number;
     public active: boolean;
     public defaultPositionId: number;
+    public lineupSlotId: number;
     public droppable: boolean;
     public eligibleSlots: [];
     public firstName: string;
@@ -16,7 +17,7 @@ export class Player {
     public proTeamId: number;
     public seasonOutlook: string;
     public totalStats: IStats | {};
-    public weekStats: IStats | {};
+    public weekStats: IStats | undefined;
     public weekProjections: IStats | {};
 
     constructor(player: IPlayer) {
@@ -24,6 +25,7 @@ export class Player {
         this.onTeamId = player.onTeamId;
         this.active = player.active;
         this.defaultPositionId = player.defaultPositionId;
+        this.lineupSlotId = -1;
         this.droppable = player.droppable;
         this.eligibleSlots = player.eligibleSlots;
         this.firstName = player.firstName;
@@ -58,13 +60,13 @@ export class Player {
         return totalStats;
     }
 
-    private getWeekStats(playerStats: IStats[]): IStats | {} {
+    private getWeekStats(playerStats: IStats[]): IStats | undefined {
         const weekStats =
             playerStats.filter((stat) => {
                 return stat.scoringPeriodId !== 0 && stat.statSourceId === 0;
             })[0] ?? undefined;
         if (!weekStats) {
-            return {};
+            return;
         }
         var statmap = new Map<string, number>();
         Object.keys(weekStats.stats).map((key: string) => {
@@ -124,7 +126,7 @@ interface IStats {
     appliedTotal: number;
     scoringPeriodId: number;
     statSourceId: number;
-    stats: any;
+    stats: any; //IScoring
 }
 
 interface IScoring {

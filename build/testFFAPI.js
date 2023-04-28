@@ -27,15 +27,15 @@ function testGetLeagueInfo() {
 //testGetLeagueInfo();
 function testGetMatchups() {
     return __awaiter(this, void 0, void 0, function* () {
-        const matchups = yield testAPI.getMatchups();
-        console.log(matchups);
+        const matchups = yield testAPI.getMatchups(1);
+        console.log(matchups[0].away);
     });
 }
 //testGetMatchups();
 function testGetTeams() {
     return __awaiter(this, void 0, void 0, function* () {
         const teams_week3 = yield testAPI.getTeams(3);
-        console.log(teams_week3[0].roster);
+        console.log(teams_week3[0].roster[0].eligibleSlots);
     });
 }
 testGetTeams();

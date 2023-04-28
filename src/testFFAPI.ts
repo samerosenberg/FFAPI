@@ -1,3 +1,4 @@
+import { Team } from "./Classes/team";
 import { FFAPI } from "./ffapi";
 import leagueInfo from "./leagueInfo.json";
 
@@ -14,15 +15,15 @@ async function testGetLeagueInfo() {
 //testGetLeagueInfo();
 
 async function testGetMatchups(): Promise<void> {
-    const matchups = await testAPI.getMatchups();
-    console.log(matchups);
+    const matchups = await testAPI.getMatchups(1);
+    console.log(matchups[0].away);
 }
 
 //testGetMatchups();
 
 async function testGetTeams(): Promise<void> {
-    const teams_week3 = await testAPI.getTeams(3);
-    console.log(teams_week3[0].roster);
+    const teams_week3: Team[] = await testAPI.getTeams(3);
+    console.log(teams_week3[0].roster[0].eligibleSlots);
 }
 
 testGetTeams();

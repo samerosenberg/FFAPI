@@ -46,7 +46,7 @@ class Player {
             return stat.scoringPeriodId !== 0 && stat.statSourceId === 0;
         })[0]) !== null && _a !== void 0 ? _a : undefined;
         if (!weekStats) {
-            return {};
+            return;
         }
         var statmap = new Map();
         Object.keys(weekStats.stats).map((key) => {

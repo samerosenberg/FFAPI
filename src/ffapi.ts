@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
-import { Team, ITeam } from "./team";
-import { Player, IPlayer, IESPNPlayer } from "./player";
+import { Team, ITeam } from "./Classes/team";
+import { Player, IPlayer, IESPNPlayer } from "./Classes/player";
+import { IMatchup } from "./Classes/matchup";
 
 export class FFAPI {
     private leagueID: string;
@@ -34,13 +35,15 @@ export class FFAPI {
             });
     }
 
-    public getMatchups(): Promise<any> {
+    public getMatchups(week: number): Promise<any> {
         const route = this.createRoute("?view=mMatchupScore");
 
         return axios
             .get(route, this.axiosConfig())
             .then((response) => {
-                return response.data;
+                return response.data.schedule.filter((matchup: IMatchup) => {
+                    return matchup.matchupPeriodId === week;
+                });
             })
             .catch((err) => {
                 return err;

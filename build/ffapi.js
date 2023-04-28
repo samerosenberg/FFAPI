@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FFAPI = void 0;
 const axios_1 = __importDefault(require("axios"));
-const team_1 = require("./team");
-const player_1 = require("./player");
+const team_1 = require("./Classes/team");
+const player_1 = require("./Classes/player");
 class FFAPI {
     constructor(leagueID, year, cookies) {
         this.baseURL = "http://fantasy.espn.com/apis/v3/games/ffl/seasons/";
@@ -26,12 +26,14 @@ class FFAPI {
             return err;
         });
     }
-    getMatchups() {
+    getMatchups(week) {
         const route = this.createRoute("?view=mMatchupScore");
         return axios_1.default
             .get(route, this.axiosConfig())
             .then((response) => {
-            return response.data;
+            return response.data.schedule.filter((matchup) => {
+                return matchup.matchupPeriodId === week;
+            });
         })
             .catch((err) => {
             return err;

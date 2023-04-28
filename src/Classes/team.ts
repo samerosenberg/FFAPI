@@ -34,13 +34,44 @@ export class Team {
         this.roster = team.roster.entries.map((poolEntry: IPlayerPoolEntry) => {
             const player = poolEntry.playerPoolEntry;
             const newPlayer = new Player(player.player);
-            newPlayer.onTeamId = player.onTeamId; // can we include current slot too
+            newPlayer.onTeamId = player.onTeamId;
+            newPlayer.lineupSlotId = poolEntry.lineupSlotId;
             return newPlayer;
         });
         this.transactionCounter = team.transactionCounter;
         this.waiverRank = team.waiverRank;
     }
+
+    //TODO: Fix this
+    public getMaxPointsForWeek(): number {
+        const roster = new Map<string, Map<number, number>[]>();
+        for (const [slotId, pos] of lineupSlotIds) {
+            this.roster.map((player) => {
+                // if (pos in roster) {
+                //     roster[pos].append([
+                //         player.id,
+                //         player.weekStats?.appliedTotal ?? 0,
+                //     ]);
+                // } else {
+                //     roster[pos] = [
+                //         [player.id, player.weekStats?.appliedTotal ?? 0],
+                //     ];
+                // }
+            });
+        }
+        return 0;
+    }
 }
+
+const lineupSlotIds = new Map<number, string>([
+    [0, "QB"],
+    [2, "RB"],
+    [4, "WR"],
+    [6, "TE"],
+    [23, "FLEX"],
+    [16, "D/ST"],
+    [17, "K"],
+]);
 
 export interface ITeam {
     abbrev: string;
@@ -61,6 +92,7 @@ export interface ITeam {
 }
 
 interface IPlayerPoolEntry {
+    lineupSlotId: number;
     playerPoolEntry: IESPNPlayer;
 }
 
