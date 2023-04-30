@@ -9,7 +9,7 @@ const testAPI = new FFAPI(leagueInfo.leagueID, 2022, {
 
 async function testGetLeagueInfo() {
     const league = await testAPI.getLeagueInfo();
-    console.log(league);
+    console.log(league.settings.rosterSettings);
 }
 
 //testGetLeagueInfo();
@@ -22,11 +22,20 @@ async function testGetMatchups(): Promise<void> {
 //testGetMatchups();
 
 async function testGetTeams(): Promise<void> {
-    const teams_week3: Team[] = await testAPI.getTeams(3);
-    console.log(teams_week3[0].roster[0].eligibleSlots);
+    const teams_week3 = await testAPI.getTeams(3);
+    console.log(teams_week3[0].roster.entries[10].playerPoolEntry.player);
 }
 
-testGetTeams();
+//testGetTeams();
+
+async function testMaxRoster(): Promise<void> {
+    const teams_week3: Team[] = await testAPI.getTeams(3);
+    console.log(teams_week3[0].roster);
+
+    console.log(teams_week3[0].getMaxPointsForWeek());
+}
+
+testMaxRoster();
 
 async function testGetTeamsRoster(): Promise<void> {
     const teams_week1 = await testAPI.getTeams(3);
@@ -53,8 +62,8 @@ async function testGetTeamsRoster(): Promise<void> {
 //testGetTeamsRoster();
 
 async function testGetPlayers(): Promise<void> {
-    const players = await testAPI.getPlayers([2976212], 5);
-    console.log(players[0]);
+    const players = await testAPI.getPlayers([2976316], 3);
+    console.log(players);
     //console.log("002022:", players[0].player.stats[1].stats);
     //console.log("weekly:", players.players[0].player.stats[2].stats); //scoring period === week && stateSourceId === 0: points scored
     //console.log("1120221:", players.players[0].player.stats[4].stats); //scoring period === week && statSourceId === 1: projections

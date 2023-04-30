@@ -7,7 +7,7 @@ export class Player {
     public defaultPositionId: number;
     public lineupSlotId: number;
     public droppable: boolean;
-    public eligibleSlots: [];
+    public eligibleSlots: number[];
     public firstName: string;
     public fullName: string;
     public injured: boolean;
@@ -20,7 +20,7 @@ export class Player {
     public weekStats: IStats | undefined;
     public weekProjections: IStats | {};
 
-    constructor(player: IPlayer) {
+    constructor(player: IPlayer, week: number) {
         this.id = player.id;
         this.onTeamId = player.onTeamId;
         this.active = player.active;
@@ -37,8 +37,8 @@ export class Player {
         this.proTeamId = player.proTeamId;
         this.seasonOutlook = player.seasonOutlook;
         this.totalStats = this.getTotalStats(player.stats);
-        this.weekStats = this.getWeekStats(player.stats);
-        this.weekProjections = this.getWeekProjections(player.stats);
+        this.weekStats = this.getWeekStats(player.stats, week);
+        this.weekProjections = this.getWeekProjections(player.stats, week);
     }
 
     private getTotalStats(playerStats: IStats[]): IStats | {} {
@@ -60,10 +60,10 @@ export class Player {
         return totalStats;
     }
 
-    private getWeekStats(playerStats: IStats[]): IStats | undefined {
+    private getWeekStats(playerStats: IStats[], week: number): IStats | undefined {
         const weekStats =
             playerStats.filter((stat) => {
-                return stat.scoringPeriodId !== 0 && stat.statSourceId === 0;
+                return stat.scoringPeriodId === week && stat.statSourceId === 0;
             })[0] ?? undefined;
         if (!weekStats) {
             return;
@@ -79,10 +79,10 @@ export class Player {
         return weekStats;
     }
 
-    private getWeekProjections(stats: IStats[]): IStats | {} {
+    private getWeekProjections(stats: IStats[], week: number): IStats | {} {
         const weekProjections =
             stats.filter((stat) => {
-                return stat.scoringPeriodId !== 0 && stat.statSourceId === 1;
+                return stat.scoringPeriodId === week && stat.statSourceId === 1;
             })[0] ?? undefined;
         if (!weekProjections) {
             return {};

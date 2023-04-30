@@ -45,7 +45,7 @@ class FFAPI {
             .get(route, this.axiosConfig())
             .then((response) => {
             return response.data.teams.map((team) => {
-                return new team_1.Team(team);
+                return new team_1.Team(team, week);
             });
         })
             .catch((err) => {
@@ -61,7 +61,7 @@ class FFAPI {
             .get(route, config)
             .then((response) => {
             return response.data.players.map((player) => {
-                const newPlayer = new player_1.Player(player.player);
+                const newPlayer = new player_1.Player(player.player, week);
                 newPlayer.onTeamId = player.onTeamId;
                 return newPlayer;
             });

@@ -21,7 +21,7 @@ const testAPI = new ffapi_1.FFAPI(leagueInfo_json_1.default.leagueID, 2022, {
 function testGetLeagueInfo() {
     return __awaiter(this, void 0, void 0, function* () {
         const league = yield testAPI.getLeagueInfo();
-        console.log(league);
+        console.log(league.settings.rosterSettings);
     });
 }
 //testGetLeagueInfo();
@@ -35,10 +35,18 @@ function testGetMatchups() {
 function testGetTeams() {
     return __awaiter(this, void 0, void 0, function* () {
         const teams_week3 = yield testAPI.getTeams(3);
-        console.log(teams_week3[0].roster[0].eligibleSlots);
+        console.log(teams_week3[0].roster.entries[10].playerPoolEntry.player);
     });
 }
-testGetTeams();
+//testGetTeams();
+function testMaxRoster() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const teams_week3 = yield testAPI.getTeams(3);
+        console.log(teams_week3[0].roster);
+        console.log(teams_week3[0].getMaxPointsForWeek());
+    });
+}
+testMaxRoster();
 function testGetTeamsRoster() {
     return __awaiter(this, void 0, void 0, function* () {
         const teams_week1 = yield testAPI.getTeams(3);
@@ -64,8 +72,8 @@ function testGetTeamsRoster() {
 //testGetTeamsRoster();
 function testGetPlayers() {
     return __awaiter(this, void 0, void 0, function* () {
-        const players = yield testAPI.getPlayers([2976212], 5);
-        console.log(players[0]);
+        const players = yield testAPI.getPlayers([2976316], 3);
+        console.log(players);
         //console.log("002022:", players[0].player.stats[1].stats);
         //console.log("weekly:", players.players[0].player.stats[2].stats); //scoring period === week && stateSourceId === 0: points scored
         //console.log("1120221:", players.players[0].player.stats[4].stats); //scoring period === week && statSourceId === 1: projections

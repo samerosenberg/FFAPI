@@ -8,15 +8,10 @@ export class FFAPI {
     private year: number;
     private cookies: { espn_s2: string; swid: string } | undefined;
 
-    private baseURL: string =
-        "http://fantasy.espn.com/apis/v3/games/ffl/seasons/";
+    private baseURL: string = "http://fantasy.espn.com/apis/v3/games/ffl/seasons/";
     private mid: string = "/segments/0/leagues/";
 
-    constructor(
-        leagueID: string,
-        year: number,
-        cookies?: { espn_s2: string; swid: string }
-    ) {
+    constructor(leagueID: string, year: number, cookies?: { espn_s2: string; swid: string }) {
         this.leagueID = leagueID;
         this.year = year;
         this.cookies = cookies;
@@ -51,15 +46,13 @@ export class FFAPI {
     }
 
     public getTeams(week: number): Promise<any> {
-        const route = this.createRoute(
-            `?scoringPeriodId=${week}&view=mRoster&view=mTeam`
-        );
+        const route = this.createRoute(`?scoringPeriodId=${week}&view=mRoster&view=mTeam`);
 
         return axios
             .get(route, this.axiosConfig())
             .then((response) => {
                 return response.data.teams.map((team: ITeam) => {
-                    return new Team(team);
+                    return new Team(team, week);
                 });
             })
             .catch((err) => {
@@ -67,10 +60,8 @@ export class FFAPI {
             });
     }
 
-    public getPlayers(playerIds: [number], week?: number): Promise<any> {
-        const route = this.createRoute(
-            `?scoringPeriodId=${week}&view=kona_player_info`
-        );
+    public getPlayers(playerIds: [number], week: number): Promise<any> {
+        const route = this.createRoute(`?scoringPeriodId=${week}&view=kona_player_info`);
         const config = this.axiosConfig();
         const filters = { players: { filterIds: { value: playerIds } } };
         config.headers["x-fantasy-filter"] = JSON.stringify(filters);
@@ -79,7 +70,7 @@ export class FFAPI {
             .get(route, config)
             .then((response) => {
                 return response.data.players.map((player: IESPNPlayer) => {
-                    const newPlayer = new Player(player.player);
+                    const newPlayer = new Player(player.player, week);
                     newPlayer.onTeamId = player.onTeamId;
                     return newPlayer;
                 });

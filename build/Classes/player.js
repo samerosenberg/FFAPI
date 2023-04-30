@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Player = void 0;
 class Player {
-    constructor(player) {
+    constructor(player, week) {
         this.id = player.id;
         this.onTeamId = player.onTeamId;
         this.active = player.active;
@@ -19,8 +19,8 @@ class Player {
         this.proTeamId = player.proTeamId;
         this.seasonOutlook = player.seasonOutlook;
         this.totalStats = this.getTotalStats(player.stats);
-        this.weekStats = this.getWeekStats(player.stats);
-        this.weekProjections = this.getWeekProjections(player.stats);
+        this.weekStats = this.getWeekStats(player.stats, week);
+        this.weekProjections = this.getWeekProjections(player.stats, week);
     }
     getTotalStats(playerStats) {
         var _a;
@@ -40,10 +40,10 @@ class Player {
         totalStats.stats = statmap;
         return totalStats;
     }
-    getWeekStats(playerStats) {
+    getWeekStats(playerStats, week) {
         var _a;
         const weekStats = (_a = playerStats.filter((stat) => {
-            return stat.scoringPeriodId !== 0 && stat.statSourceId === 0;
+            return stat.scoringPeriodId === week && stat.statSourceId === 0;
         })[0]) !== null && _a !== void 0 ? _a : undefined;
         if (!weekStats) {
             return;
@@ -58,10 +58,10 @@ class Player {
         weekStats.stats = statmap;
         return weekStats;
     }
-    getWeekProjections(stats) {
+    getWeekProjections(stats, week) {
         var _a;
         const weekProjections = (_a = stats.filter((stat) => {
-            return stat.scoringPeriodId !== 0 && stat.statSourceId === 1;
+            return stat.scoringPeriodId === week && stat.statSourceId === 1;
         })[0]) !== null && _a !== void 0 ? _a : undefined;
         if (!weekProjections) {
             return {};

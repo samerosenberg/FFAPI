@@ -1,5 +1,7 @@
 import { TeamRecord, ITeamRecord } from "./record";
 import { Player, IESPNPlayer } from "./player";
+import { Roster } from "./roster";
+import { start } from "repl";
 
 export class Team {
     public abbrev: string;
@@ -14,11 +16,11 @@ export class Team {
     public primaryOwner: string;
     public rankCalculatedFinal: number;
     public record: TeamRecord;
-    public roster: Player[];
+    public roster: Roster;
     public transactionCounter: ITransactionCounter;
     public waiverRank: number;
 
-    constructor(team: ITeam) {
+    constructor(team: ITeam, week: number) {
         this.abbrev = team.abbrev;
         this.currentProjectedRank = team.currentProjectedRank;
         this.divisionId = team.divisionId;
@@ -31,47 +33,72 @@ export class Team {
         this.primaryOwner = team.primaryOwner;
         this.rankCalculatedFinal = team.rankCalculatedFinal;
         this.record = new TeamRecord(team.record);
-        this.roster = team.roster.entries.map((poolEntry: IPlayerPoolEntry) => {
-            const player = poolEntry.playerPoolEntry;
-            const newPlayer = new Player(player.player);
-            newPlayer.onTeamId = player.onTeamId;
-            newPlayer.lineupSlotId = poolEntry.lineupSlotId;
-            return newPlayer;
-        });
+        this.roster = Roster.rosterFromArray(
+            team.roster.entries.map((poolEntry: IPlayerPoolEntry) => {
+                const player = poolEntry.playerPoolEntry;
+                const newPlayer = new Player(player.player, week);
+                newPlayer.onTeamId = player.onTeamId;
+                newPlayer.lineupSlotId = poolEntry.lineupSlotId;
+                return newPlayer;
+            })
+        );
         this.transactionCounter = team.transactionCounter;
         this.waiverRank = team.waiverRank;
     }
 
     //TODO: Fix this
-    public getMaxPointsForWeek(): number {
-        const roster = new Map<string, Map<number, number>[]>();
-        for (const [slotId, pos] of lineupSlotIds) {
-            this.roster.map((player) => {
-                // if (pos in roster) {
-                //     roster[pos].append([
-                //         player.id,
-                //         player.weekStats?.appliedTotal ?? 0,
-                //     ]);
-                // } else {
-                //     roster[pos] = [
-                //         [player.id, player.weekStats?.appliedTotal ?? 0],
-                //     ];
-                // }
-            });
+    public getMaxPointsForWeek(): Roster {
+        const maxRoster = Object.assign([], this.roster);
+        var maxPoints = 0;
+
+        for (const pos of lineupSlotIds) {
+            for (const starter of maxRoster[pos]) {
+                var maxPlayer: Player | undefined = undefined;
+                for (const player of maxRoster["BE"]) {
+                    if (player.eligibleSlots.includes(starter.lineupSlotId)) {
+                        if (!maxPlayer) {
+                            maxPlayer = player;
+                        } else if ((maxPlayer.weekStats?.appliedTotal ?? 0) < (player.weekStats?.appliedTotal ?? 0)) {
+                            maxPlayer = player;
+                        }
+                    }
+                }
+                if (maxPlayer) {
+                    if ((starter.weekStats?.appliedTotal ?? 0) < (maxPlayer.weekStats?.appliedTotal ?? 0)) {
+                        maxRoster[pos] = maxRoster[pos].filter((removePlayer) => {
+                            return removePlayer.id !== starter.id;
+                        });
+                        maxRoster[pos].push(maxPlayer);
+                        maxRoster["BE"] = maxRoster["BE"].filter((removePlayer: Player) => {
+                            return removePlayer.id !== maxPlayer?.id;
+                        });
+                        maxRoster["BE"].push(starter);
+                        maxPoints += maxPlayer.weekStats?.appliedTotal ?? 0;
+                    } else {
+                        maxPoints += starter.weekStats?.appliedTotal ?? 0;
+                    }
+                } else {
+                    maxPoints += starter.weekStats?.appliedTotal ?? 0;
+                }
+            }
         }
-        return 0;
+
+        return maxRoster;
     }
 }
 
-const lineupSlotIds = new Map<number, string>([
-    [0, "QB"],
-    [2, "RB"],
-    [4, "WR"],
-    [6, "TE"],
-    [23, "FLEX"],
-    [16, "D/ST"],
-    [17, "K"],
-]);
+const lineupSlotIds = ["QB", "RB", "WR", "TE", "FLEX", "DST", "K"];
+
+const posToID: Record<string, number> = {
+    QB: 0,
+    RB: 2,
+    WR: 4,
+    TE: 6,
+    FLEX: 23,
+    DST: 16,
+    K: 17,
+    BE: 20,
+};
 
 export interface ITeam {
     abbrev: string;
