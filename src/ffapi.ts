@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { Team, ITeam } from "./Classes/team";
 import { Player, IPlayer, IESPNPlayer } from "./Classes/player";
-import { IMatchup } from "./Classes/matchup";
+import { IMatchup, Matchup } from "./Classes/matchup";
 
 export class FFAPI {
     private leagueID: string;
@@ -17,7 +17,7 @@ export class FFAPI {
         this.cookies = cookies;
     }
 
-    public getLeagueInfo() {
+    public getLeagueInfo(): Promise<any> {
         const route = this.createRoute("?view=mSettings");
 
         return axios
@@ -30,7 +30,7 @@ export class FFAPI {
             });
     }
 
-    public getMatchups(week: number): Promise<any> {
+    public getMatchups(week: number): Promise<Matchup[]> {
         const route = this.createRoute("?view=mMatchupScore");
 
         return axios
@@ -45,7 +45,7 @@ export class FFAPI {
             });
     }
 
-    public getTeams(week: number): Promise<any> {
+    public getTeams(week: number): Promise<Team[]> {
         const route = this.createRoute(`?scoringPeriodId=${week}&view=mRoster&view=mTeam`);
 
         return axios
@@ -60,7 +60,7 @@ export class FFAPI {
             });
     }
 
-    public getPlayers(playerIds: [number], week: number): Promise<any> {
+    public getPlayers(playerIds: [number], week: number): Promise<Player[]> {
         const route = this.createRoute(`?scoringPeriodId=${week}&view=kona_player_info`);
         const config = this.axiosConfig();
         const filters = { players: { filterIds: { value: playerIds } } };

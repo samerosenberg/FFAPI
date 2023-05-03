@@ -27,15 +27,15 @@ function testGetLeagueInfo() {
 //testGetLeagueInfo();
 function testGetMatchups() {
     return __awaiter(this, void 0, void 0, function* () {
-        const matchups = yield testAPI.getMatchups(1);
-        console.log(matchups[0].away);
+        const matchups = yield testAPI.getMatchups(15);
+        console.log(matchups);
     });
 }
-//testGetMatchups();
+testGetMatchups();
 function testGetTeams() {
     return __awaiter(this, void 0, void 0, function* () {
         const teams_week3 = yield testAPI.getTeams(3);
-        console.log(teams_week3[0].roster.entries[10].playerPoolEntry.player);
+        console.log(teams_week3[0].roster);
     });
 }
 //testGetTeams();
@@ -46,23 +46,23 @@ function testMaxRoster() {
         console.log(teams_week3[0].getMaxPointsForWeek());
     });
 }
-testMaxRoster();
+//testMaxRoster();
 function testGetTeamsRoster() {
     return __awaiter(this, void 0, void 0, function* () {
         const teams_week1 = yield testAPI.getTeams(3);
         //console.log(teams_week1.teams[0]);
-        const roster = teams_week1.teams[0].roster;
+        const roster = teams_week1[0].roster;
         const roster_names = [];
         for (const player of roster.entries) {
-            const player_name = yield testAPI.getPlayers([player.playerId], 1);
+            const player_name = yield testAPI.getPlayers([player.id], 1);
             roster_names.push(player_name.players[0].player.fullName);
         }
         console.log(roster_names);
         const teams_week19 = yield testAPI.getTeams(4);
-        const roster_week19 = teams_week19.teams[0].roster;
+        const roster_week19 = teams_week19[0].roster;
         const roster_names_week19 = [];
         for (const player of roster_week19.entries) {
-            const player_name = yield testAPI.getPlayers([player.playerId], 1);
+            const player_name = yield testAPI.getPlayers([player.id], 1);
             roster_names_week19.push(player_name.players[0].player.fullName);
         }
         //console.log(teams_week19.teams[0]);

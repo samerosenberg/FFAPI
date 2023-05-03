@@ -28,7 +28,6 @@ class Team {
         this.transactionCounter = team.transactionCounter;
         this.waiverRank = team.waiverRank;
     }
-    //TODO: Fix this
     getMaxPointsForWeek() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
         const maxRoster = Object.assign([], this.roster);
@@ -67,7 +66,7 @@ class Team {
                 }
             }
         }
-        return maxRoster;
+        return { roster: maxRoster, points: maxPoints };
     }
 }
 exports.Team = Team;

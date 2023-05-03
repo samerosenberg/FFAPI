@@ -46,8 +46,7 @@ export class Team {
         this.waiverRank = team.waiverRank;
     }
 
-    //TODO: Fix this
-    public getMaxPointsForWeek(): Roster {
+    public getMaxPointsForWeek(): { roster: Roster; points: number } {
         const maxRoster = Object.assign([], this.roster);
         var maxPoints = 0;
 
@@ -83,7 +82,7 @@ export class Team {
             }
         }
 
-        return maxRoster;
+        return { roster: maxRoster, points: maxPoints };
     }
 }
 

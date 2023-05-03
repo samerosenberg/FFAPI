@@ -1,24 +1,149 @@
 import { stat } from "fs";
 
 export class Player {
+    /**
+     * Player Id
+     *
+     * @type {number}
+     * @memberof Player
+     */
     public id: number;
+
+    /**
+     * League Team Id
+     *
+     * @type {number}
+     * @memberof Player
+     */
     public onTeamId: number;
+
+    /**
+     * Active status
+     *
+     * @type {boolean}
+     * @memberof Player
+     */
     public active: boolean;
+
+    /**
+     * Default Position Id
+     *
+     * @type {number}
+     * @memberof Player
+     */
     public defaultPositionId: number;
+
+    /**
+     * Lineup slot Id
+     *
+     * @type {number}
+     * @memberof Player
+     */
     public lineupSlotId: number;
+
+    /**
+     * Droppable status
+     *
+     * @type {boolean}
+     * @memberof Player
+     */
     public droppable: boolean;
+
+    /**
+     * Array of eligible slots
+     *
+     * @type {number[]}
+     * @memberof Player
+     */
     public eligibleSlots: number[];
+
+    /**
+     * Player First Name
+     *
+     * @type {string}
+     * @memberof Player
+     */
     public firstName: string;
+
+    /**
+     * Player Full Name
+     *
+     * @type {string}
+     * @memberof Player
+     */
     public fullName: string;
+
+    /**
+     * Injured flag
+     *
+     * @type {boolean}
+     * @memberof Player
+     */
     public injured: boolean;
+
+    /**
+     * Injruy Status
+     *
+     * @type {string}
+     * @memberof Player
+     */
     public injuryStatus: string;
+
+    /**
+     * Jersey Number
+     *
+     * @type {number}
+     * @memberof Player
+     */
     public jersey: number;
+
+    /**
+     * Player Last Name
+     *
+     * @type {string}
+     * @memberof Player
+     */
     public lastName: string;
+
+    /**
+     * NFL Team Id
+     *
+     * @type {number}
+     * @memberof Player
+     */
     public proTeamId: number;
+
+    /**
+     * Season outlook
+     *
+     * @type {string}
+     * @memberof Player
+     */
     public seasonOutlook: string;
-    public totalStats: IStats | {};
+
+    /**
+     * IStats of players total yearly stats
+     *
+     * @type {(IStats | undefined)}
+     * @memberof Player
+     */
+    public totalStats: IStats | undefined;
+
+    /**
+     * IStats of players stats for scoring period
+     *
+     * @type {(IStats | undefined)}
+     * @memberof Player
+     */
     public weekStats: IStats | undefined;
-    public weekProjections: IStats | {};
+
+    /**
+     * IStats of players projections for scoring period
+     *
+     * @type {(IStats | undefined)}
+     * @memberof Player
+     */
+    public weekProjections: IStats | undefined;
 
     constructor(player: IPlayer, week: number) {
         this.id = player.id;
@@ -41,13 +166,21 @@ export class Player {
         this.weekProjections = this.getWeekProjections(player.stats, week);
     }
 
-    private getTotalStats(playerStats: IStats[]): IStats | {} {
+    /**
+     * Create the IStats of the players total stats
+     *  - ScoringPeriod === 0 and sourceId === 0
+     * @private
+     * @param {IStats[]} playerStats
+     * @return {*}  {(IStats | undefined)}
+     * @memberof Player
+     */
+    private getTotalStats(playerStats: IStats[]): IStats | undefined {
         const totalStats =
             playerStats.filter((stat) => {
                 return stat.scoringPeriodId === 0 && stat.statSourceId === 0;
             })[0] ?? undefined;
         if (!totalStats) {
-            return {};
+            return;
         }
         var statmap = new Map<string, number>();
         Object.keys(totalStats.stats).map((key: string) => {
@@ -60,6 +193,16 @@ export class Player {
         return totalStats;
     }
 
+    /**
+     * Create the IStats of the stats for scoring period
+     *  - scoringPeriod === week and sourceID === 0
+     *
+     * @private
+     * @param {IStats[]} playerStats
+     * @param {number} week
+     * @return {*}  {(IStats | undefined)}
+     * @memberof Player
+     */
     private getWeekStats(playerStats: IStats[], week: number): IStats | undefined {
         const weekStats =
             playerStats.filter((stat) => {
@@ -79,13 +222,22 @@ export class Player {
         return weekStats;
     }
 
-    private getWeekProjections(stats: IStats[], week: number): IStats | {} {
+    /**
+     * Create IStats of players projections for week
+     *  - scoringPeriod === week and sourceId === 1
+     * @private
+     * @param {IStats[]} stats
+     * @param {number} week
+     * @return {*}  {(IStats | undefined)}
+     * @memberof Player
+     */
+    private getWeekProjections(stats: IStats[], week: number): IStats | undefined {
         const weekProjections =
             stats.filter((stat) => {
                 return stat.scoringPeriodId === week && stat.statSourceId === 1;
             })[0] ?? undefined;
         if (!weekProjections) {
-            return {};
+            return;
         }
         var statmap = new Map<string, number>();
         Object.keys(weekProjections.stats).map((key: string) => {
@@ -117,38 +269,41 @@ export interface IPlayer {
     stats: IStats[];
 }
 
+/**
+ * Player format retrieved when loading Teams
+ *
+ * @export
+ * @interface IESPNPlayer
+ */
 export interface IESPNPlayer {
     player: IPlayer;
     onTeamId: number;
 }
 
+/**
+ * Stats interface for players stats
+ *
+ * @interface IStats
+ */
 interface IStats {
     appliedTotal: number;
     scoringPeriodId: number;
     statSourceId: number;
-    stats: any; //IScoring
+
+    /**
+     * Dictionary of scoring stat id to stat total
+     *
+     * @type {*}
+     * @memberof IStats
+     */
+    stats: any;
 }
 
-interface IScoring {
-    passingAttempts: number;
-    passingCompletions: number;
-    passingIncompletions: number;
-    passingYards: number;
-    passingTouchdowns: number;
-    passing2PtConversions: number;
-    passingInterceptions: number;
-    rushingAttempts: number;
-    rushingYards: number;
-    rushingTouchdowns: number;
-    rushing2PtConversions: number;
-    rushing200PlusYardGame: number;
-    receivingReceptions: number;
-    receivingYards: number;
-    receivingTouchdowns: number;
-    receiving2PtConversions: number;
-    fumbles: number;
-}
-
+/**
+ * Mapping of id to scoring stat
+ *
+ * @type {*}
+ * */
 const ScoringIdMap: Record<string, string> = {
     "0": "passingAttempts",
     "1": "passingCompletions",

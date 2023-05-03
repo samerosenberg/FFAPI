@@ -15,15 +15,15 @@ async function testGetLeagueInfo() {
 //testGetLeagueInfo();
 
 async function testGetMatchups(): Promise<void> {
-    const matchups = await testAPI.getMatchups(1);
-    console.log(matchups[0].away);
+    const matchups = await testAPI.getMatchups(15);
+    console.log(matchups);
 }
 
-//testGetMatchups();
+testGetMatchups();
 
 async function testGetTeams(): Promise<void> {
     const teams_week3 = await testAPI.getTeams(3);
-    console.log(teams_week3[0].roster.entries[10].playerPoolEntry.player);
+    console.log(teams_week3[0].roster);
 }
 
 //testGetTeams();
@@ -35,25 +35,25 @@ async function testMaxRoster(): Promise<void> {
     console.log(teams_week3[0].getMaxPointsForWeek());
 }
 
-testMaxRoster();
+//testMaxRoster();
 
 async function testGetTeamsRoster(): Promise<void> {
     const teams_week1 = await testAPI.getTeams(3);
     //console.log(teams_week1.teams[0]);
-    const roster = teams_week1.teams[0].roster;
+    const roster = teams_week1[0].roster;
     const roster_names = [];
     for (const player of roster.entries) {
-        const player_name = await testAPI.getPlayers([player.playerId], 1);
-        roster_names.push(player_name.players[0].player.fullName);
+        const player_name = await testAPI.getPlayers([player.id], 1);
+        roster_names.push(player_name[0].fullName);
     }
     console.log(roster_names);
 
     const teams_week19 = await testAPI.getTeams(4);
-    const roster_week19 = teams_week19.teams[0].roster;
+    const roster_week19 = teams_week19[0].roster;
     const roster_names_week19 = [];
     for (const player of roster_week19.entries) {
-        const player_name = await testAPI.getPlayers([player.playerId], 1);
-        roster_names_week19.push(player_name.players[0].player.fullName);
+        const player_name = await testAPI.getPlayers([player.id], 1);
+        roster_names_week19.push(player_name[0].fullName);
     }
     //console.log(teams_week19.teams[0]);
     console.log(roster_names_week19);
@@ -63,7 +63,7 @@ async function testGetTeamsRoster(): Promise<void> {
 
 async function testGetPlayers(): Promise<void> {
     const players = await testAPI.getPlayers([2976316], 3);
-    console.log(players);
+    console.log(players[0].id);
     //console.log("002022:", players[0].player.stats[1].stats);
     //console.log("weekly:", players.players[0].player.stats[2].stats); //scoring period === week && stateSourceId === 0: points scored
     //console.log("1120221:", players.players[0].player.stats[4].stats); //scoring period === week && statSourceId === 1: projections
